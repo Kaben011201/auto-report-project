@@ -1,12 +1,16 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+"use client";
+import { useGetUsers } from "@/components/parts/users/api";
+import { usersColumns } from "@/components/parts/users/columns";
+import DataTable from "@/components/shared/dataTable";
 
-export default function Home() {
-
+const Page = () => {
+  const { data } = useGetUsers();
   return (
-    <div>
-      <Button>Follow Me</Button>
-      <Input />
+    <div className="max-w-xl mx-auto p-10">
+      <h1 className="mb-5">Tabel Pengguna</h1>
+      <DataTable data={data || []} columns={usersColumns} />
     </div>
   );
-}
+};
+
+export default Page;

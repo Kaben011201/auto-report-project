@@ -1,0 +1,25 @@
+import { ColumnDef } from "@tanstack/react-table";
+import ActionOption from "@/components/shared/table/actionOption";
+import { createBaseColumns } from "../createBaseColumns";
+
+export const usersColumns: ColumnDef<any>[] = [
+  ...createBaseColumns<any>(),
+  {
+    header: "Nama",
+    cell: ({ row }) => row.original.nama,
+  },
+  {
+    header: "Umur",
+    cell: ({ row }) => row.original.umur,
+  },
+  {
+    accessorKey: "action",
+    header: "Aksi",
+    cell: ({ row }) => (
+      <ActionOption
+        linkView={`/facilities-infrastructure/submissions/facility/${row.original.id}`}
+        // linkUpdate={`/facilities-infrastructure/submissions/facility/${row.original.id}/edit`}
+      />
+    ),
+  },
+];
