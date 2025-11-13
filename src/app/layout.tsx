@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import QueryProvider from "./QueryQlientProvider";
+import { MyAlertDialog } from "@/components/shared/customAlertDialog";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +32,7 @@ export default function RootLayout({
       >
         <QueryProvider>
           <main>{children}</main>
+          <MyAlertDialog />
         </QueryProvider>
       </body>
     </html>
