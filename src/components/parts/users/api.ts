@@ -1,7 +1,12 @@
 import { useFormMutation } from "@/hooks/useFormMutation";
-import { createUserService, getUsersService } from "@/services/userServices";
+import {
+  createUserService,
+  getUserByIdService,
+  getUsersService,
+  updateUserService,
+} from "@/services/userServices";
 import { DataObject } from "@/types/types";
-import { useQuery } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query";
 import { UserPayload } from "./validation";
 import { ResponseDataAttributes } from "@/utilities/responseData";
 import sendData from "@/services/sendData";
@@ -11,10 +16,20 @@ export const useGetUsers = () => {
     queryKey: ["useGetUsers"],
     queryFn: async () => {
       const response = await getUsersService();
-      return response.data
+      return response.data;
     },
   });
-}
+};
+
+export const useGetUserById = (id: number) => {
+  return useQuery({
+    queryKey: ["useGetUserById", id],
+    queryFn: async () => {
+      const response = await getUserByIdService(id);
+      return response.data;
+    },
+  });
+};
 
 export const useCreateUser = () => {
   return useFormMutation<DataObject<any>, Error, UserPayload>({
@@ -27,5 +42,17 @@ export const useCreateUser = () => {
     loadingMessage: "Membuat data...",
     successMessage: "Data berhasil dibuat",
   });
-}
+};
 
+export const useUpdateUser = (id: number) => {
+  return useFormMutation<DataObject<any>, Error, UserPayload>({
+    mutationFn: async (
+      data
+    ): Promise<ResponseDataAttributes<DataObject<any>>> => {
+      const response = await sendData((body) => updateUserService(id, body), data);
+      return response;
+    },
+    loadingMessage: "Perbarui data...",
+    successMessage: "Data berhasil diperbarui",
+  });
+};

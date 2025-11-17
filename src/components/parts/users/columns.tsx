@@ -17,7 +17,8 @@ export const usersColumns: ColumnDef<any>[] = [
     header: "Aksi",
     cell: ({ row }) => (
       <ActionOption
-        linkView={`/facilities-infrastructure/submissions/facility/${row.original.id}`}
+        linkView={`/users/${row.original.id}/detail`}
+        linkUpdate={`/users/${row.original.id}/edit`}
         // linkUpdate={`/facilities-infrastructure/submissions/facility/${row.original.id}/edit`}
       />
     ),
