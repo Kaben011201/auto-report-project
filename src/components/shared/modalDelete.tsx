@@ -1,82 +1,46 @@
-import { Trash2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { Button } from "../ui/button";
-import { DropdownMenuItem } from "../ui/dropdown-menu";
 import { useQueryClient } from "@tanstack/react-query";
-import { myAlert } from "@/lib/myAlert";
-import { useDelete } from "../parts/api";
-
-type ModalDeleteProps = {
-  endpoint: string | string[];
-  endPointBack?: string;
-  queryKey?: string[];
-  asMenuItem?: boolean;
-};
+import { useRouter } from "next/navigation";
+import { useDeleteByService } from "../parts/global/api";
+import { DropdownMenuItem } from "../ui/dropdown-menu";
+import { ResponseDataAttributes } from "@/utilities/responseData";
+import { Trash } from "lucide-react";
 
 const ModalDelete = ({
   endpoint,
   endPointBack,
   queryKey,
-  asMenuItem,
-}: ModalDeleteProps) => {
+}: {
+  endpoint: string | (() => Promise<ResponseDataAttributes<any>>);
+  endPointBack?: string;
+  queryKey?: string;
+}) => {
   const router = useRouter();
-  const deleteMutation = useDelete();
-  const queryClient = useQueryClient(); // ✅ ambil dari context React Query
+  const queryClient = useQueryClient();
+  // const deleteMutation = useDelete();
+  const deleteByServiceMutation = useDeleteByService();
 
   const handleDelete = async () => {
-    try {
-      const res = await myAlert.confirm(
-        "Yakin ingin menghapus!",
-        "Data yang dihapus secara permanen tidak dapat dikembalikan"
-      );
-      if (res) {
-        if (Array.isArray(endpoint)) {
-          console.log("Deleting multiple:", endpoint);
-          await Promise.allSettled(
-            endpoint.map((ep) => deleteMutation.mutateAsync({ endpoint: ep }))
-          );
-        } else {
-          console.log("Deleting single:", endpoint);
-          await deleteMutation.mutateAsync({ endpoint });
-        }
-
-        console.log("Invalidating key:", queryKey);
-        if (queryKey) {
-          await queryClient.invalidateQueries({ queryKey });
-          console.log(
-            "Current cache keys:",
-            queryClient
-              .getQueryCache()
-              .getAll()
-              .map((q) => q.queryKey)
-          );
-        }
-
-        if (endPointBack) {
-          router.push(endPointBack);
-        }
-      }
-    } catch (error: any) {
-      console.error("❌ Error in handleDelete:", error);
+    if (typeof endpoint === "string") {
+      // await deleteMutation.mutateAsync({ endpoint });
+    } else {
+      await deleteByServiceMutation.mutateAsync(endpoint);
     }
+    if (queryKey) {
+      console.log({ queryKey });
+      queryClient.invalidateQueries({ queryKey: [queryKey] });
+    }
+    if (endPointBack) router.push(endPointBack);
   };
 
-  if (asMenuItem) {
-    return (
-      <DropdownMenuItem
-        onClick={handleDelete}
-        className="flex items-center gap-2 text-red-600 cursor-pointer"
-      >
-        <Trash2 className="h-4 w-4" />
-        Hapus
-      </DropdownMenuItem>
-    );
-  }
-
   return (
-    <Button size="icon" variant="ghost" onClick={handleDelete}>
-      <Trash2 className="text-red-500 !stroke-[3]" />
-    </Button>
+    <DropdownMenuItem
+      onClick={(e) => {
+        handleDelete();
+      }}
+      className="cursor-pointer text-red-500 hover:!text-red-500"
+    >
+      <Trash className="h-4 w-4 text-red-500" /> Hapus
+    </DropdownMenuItem>
   );
 };
 

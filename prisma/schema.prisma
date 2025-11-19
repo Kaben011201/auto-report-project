@@ -19,3 +19,35 @@ model User{
  nama String
  umur Int
 }
+
+/*
+
+int = bilangan bulat = 1, 2, 3, 4, -5, -10
+float = bilangan desimal = 1.5, 2.3, -4.5
+string = teks = "hello", "user123", "121140111", "082130353114"
+boolean = true / false = 1 / 0
+array = daftar = [1, 2, 3], ["apple", "banana", "cherry"]
+
+klasifikasi tipe array
+ array of int atau array of number = [1, 2, 3]
+ array of string = ["123", "123". "hello"]
+ array of boolean = [true, false, true]
+ array of object = [ { key: value}, { key2: value2} ]
+multiarray  = [ [1, 2], [3, 4] ]
+
+object = { key: value, key2: value2}
+
+contoh object 
+{
+  id: 1,
+  name: "Bendry",
+  isAdmin: true,
+  hobbies: ["coding", "reading"],
+  graduationYears: [2018, 2019, 2020],
+  address: {
+    street: "Jl. Merdeka No. 10",
+    city: "Jakarta",
+    country: "Indonesia"
+  }
+}
+*/

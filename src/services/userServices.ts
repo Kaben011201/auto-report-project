@@ -3,6 +3,7 @@ import { UserPayload } from "@/components/parts/users/validation";
 import { prisma } from "@/lib/prisma";
 import { ResponseData } from "@/utilities/responseData";
 
+//SECTION - Get All Users
 export async function getUsersService() {
   try {
     const users = await prisma.user.findMany({
@@ -19,6 +20,7 @@ export async function getUsersService() {
   }
 }
 
+//SECTION - Get One User - Get Detail User
 export async function getUserByIdService(id: number) {
   try {
     const users = await prisma.user.findUnique({
@@ -33,6 +35,7 @@ export async function getUserByIdService(id: number) {
   }
 }
 
+//SECTION - Create User
 export async function createUserService(body: UserPayload) {
   try {
     const newUser = await prisma.user.create({
@@ -50,13 +53,15 @@ export async function createUserService(body: UserPayload) {
   }
 }
 
+
+//SECTION - Update User
 export async function updateUserService(id: number, body: UserPayload) {
   try {
     const newUser = await prisma.user.update({
       where: { id },
       data: {
         nama: body.nama,
-        umur: body.umur as number,
+        umur: Number(body.umur),
       },
     });
     return ResponseData.ok(newUser, "User update successfully");
@@ -65,5 +70,19 @@ export async function updateUserService(id: number, body: UserPayload) {
     return ResponseData.error(
       error instanceof Error ? error.message : "Unknown error"
     );
+  }
+}
+
+//SECTION - Delete User
+export async function deleteUserService(id: number) {
+  try {
+    const deleteUser = await prisma.user.delete({
+      where: { id },
+    });
+
+    return ResponseData.ok(deleteUser, "User deleted successfully");
+  } catch(error: any) {
+    console.error("User deletion error", error);
+    return ResponseData.error("Unknown error");
   }
 }

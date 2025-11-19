@@ -8,7 +8,7 @@ import ModalDelete from "../modalDelete";
 type actionOptionPops = {
   linkView?: string;
   linkUpdate?: string;
-  linkDelete?: string;
+  linkDelete?: string | (() => Promise<any>);
   queryKey?: string[];
   other?: React.ReactNode;
 };
@@ -58,9 +58,12 @@ export default function ActionOption({
           </DropdownMenuItem>
         )}
         {other}
-        {/* {linkDelete && queryKey && (
-          <ModalDelete endpoint={linkDelete} queryKey={queryKey} asMenuItem />
-        )} */}
+        {linkDelete && queryKey && (
+          <ModalDelete
+            endpoint={linkDelete}
+            queryKey={queryKey[0]}
+          />
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
